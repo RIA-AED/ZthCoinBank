@@ -1,0 +1,7 @@
+name: ZthCoinBank
+version: '${project.version}'
+main: ink.magma.zthcoinbank.ZthCoinBank
+api-version: '1.20'
+depend: [ Vault ]
+authors: [ MagmaBlock ]
+description: 为 Zth 服务器的实体货币兑换提供指令层实现

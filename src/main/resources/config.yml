@@ -1,0 +1,13 @@
+items:
+  ingot: null
+  nugget: null
+  powder: null
+settings:
+  bank_account:
+    enable: true
+    account_name: RCB
+    bill_pool: 0
+  coin_value:
+    ingot: 1
+    nugget: 0.1
+    powder: 0.01
