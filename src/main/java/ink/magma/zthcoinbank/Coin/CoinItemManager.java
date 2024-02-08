@@ -18,7 +18,7 @@ public class CoinItemManager {
      * 获取物品堆数组中包含的货币和数量
      *
      * @param itemStacks 物品堆数组
-     * @return 货币 -> 数量 的 Map
+     * @return 货币 -> 数量 的 Map, Coin 的数量可能为 0, 因此，Map 总是不为空.
      */
     public static Map<Coin, Integer> getCoinAmountMapInItems(ItemStack[] itemStacks) throws NoCoinSetInConfigException {
         // 结果 Map

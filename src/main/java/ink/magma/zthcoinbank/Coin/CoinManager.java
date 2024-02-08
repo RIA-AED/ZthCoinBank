@@ -3,11 +3,15 @@ package ink.magma.zthcoinbank.Coin;
 import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
 import ink.magma.zthcoinbank.Coin.Error.UnknowCoinNameException;
 import ink.magma.zthcoinbank.ZthCoinBank;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +21,48 @@ public class CoinManager {
 
     public CoinManager() throws NoCoinSetInConfigException {
         configuration = ZthCoinBank.configuration;
+    }
+
+    public static List<Component> getBankTui() {
+        MiniMessage mini = MiniMessage.miniMessage();
+        Map<String, Coin> coins;
+
+        try {
+            coins = ZthCoinBank.coinManager.getAllCoins();
+        } catch (NoCoinSetInConfigException e) {
+            return new ArrayList<>();
+        }
+
+        Component head = mini.deserialize("<b><gradient:#f38181:#fce38a>---===</gradient> <color:#f9ca24>RIA Central bank</color> <gradient:#fce38a:#f38181>===---</gradient></b>");
+        Component withdraw = mini.deserialize("<color:#ff85c0>$ 取现</color> > ");
+        Component deposit = mini.deserialize("<color:#ffd666>$ 存现</color> > ");
+        Component depositAll = mini.deserialize("<color:#faad14>$ 背包全部存现</color> > ");
+
+        for (Coin coin : coins.values()) {
+            withdraw = withdraw.append(mini.deserialize(MessageFormat.format(
+                    "<click:suggest_command:''/coin withdraw {0} ''><hover:show_text:'输入此币种的数量'>{1}</hover></click>  ",
+                    coin.getCoinName(),
+                    mini.serialize(coin.getDisplayName())
+            )));
+
+            deposit = deposit.append(mini.deserialize(MessageFormat.format(
+                    "<click:suggest_command:''/coin deposit {0} ''><hover:show_text:'输入此币种的数量'>{1}</hover></click>  ",
+                    coin.getCoinName(),
+                    mini.serialize(coin.getDisplayName())
+            )));
+
+            depositAll = depositAll.append(mini.deserialize(MessageFormat.format(
+                    "<click:run_command:''/coin deposit {0}''><hover:show_text:'点击存现背包中所有此币种的货币'>{1}</hover></click>  ",
+                    coin.getCoinName(),
+                    mini.serialize(coin.getDisplayName())
+            )));
+        }
+
+        depositAll = depositAll.append(mini.deserialize(
+                "<click:run_command:'/coin deposit-all'><color:#faad14><hover:show_text:'点击存现背包中所有货币'>[存入所有币种]</hover></color></click>"
+        ));
+
+        return List.of(head, withdraw, deposit, depositAll);
     }
 
     public void saveCoinItem(ItemStack coin, String coinName) throws UnknowCoinNameException {

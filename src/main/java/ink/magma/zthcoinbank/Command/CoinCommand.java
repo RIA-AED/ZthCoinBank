@@ -14,10 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import revxrsal.commands.annotation.AutoComplete;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Optional;
-import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.math.BigDecimal;
@@ -36,22 +33,24 @@ public class CoinCommand {
     @Subcommand("help")
     public void coinHelpCommand(CommandSender sender) {
         Map<String, String> help = new HashMap<>();
+        help.put("bank", "显示银行界面");
         help.put("set item <货币类型>", "将主手上的物品设置某种货币");
         help.put("set value <价值>", "设置某种货币单个的价值");
         help.put("check hand", "检测手中的物品是否是一种货币");
         help.put("check inventory", "检测物品栏中有多少货币及其价值");
         help.put("withdraw <货币类型> <数量>", "取现 - 将余额兑换为实体货币");
         help.put("deposit <货币类型> [数量]", "存现 - 将实体货币兑换为余额");
+        help.put("deposit-all", "全部存现 - 将背包中所有实体货币兑换为余额");
 
 
         Component helpComponent = Component.text("ZthCoinBank - 指令帮助文件").color(NamedTextColor.WHITE).appendSpace().appendSpace();
-        helpComponent = helpComponent.append(Component.text("By MagmaBlock").color(NamedTextColor.GRAY)).appendNewline().appendNewline();
+        helpComponent = helpComponent.append(Component.text("By MagmaBlock").color(NamedTextColor.GRAY)).appendNewline();
 
         for (String command : help.keySet()) {
             Component thisCmdHelp = Component.text("/coin " + command).color(NamedTextColor.WHITE).appendSpace()
-                    .append(Component.text(help.get(command)).color(NamedTextColor.GRAY))
-                    .appendNewline();
+                    .append(Component.text(help.get(command)).color(NamedTextColor.GRAY));
 
+            helpComponent = helpComponent.appendNewline();
             helpComponent = helpComponent.append(thisCmdHelp);
         }
 
@@ -61,7 +60,7 @@ public class CoinCommand {
     @Subcommand("set item")
     @AutoComplete("@coinType")
     @CommandPermission("zth.coinbank.admin")
-    public void setCoinCommand(Player sender, String coinType) {
+    public void setCoinCommand(Player sender, @Named("货币类型") String coinType) {
         ItemStack mainHandItem = sender.getInventory().getItemInMainHand();
 
         if (mainHandItem.getType() == Material.AIR || mainHandItem.getAmount() == 0) {
@@ -94,7 +93,7 @@ public class CoinCommand {
 
     @Subcommand("set value")
     @CommandPermission("zth.coinbank.admin")
-    public void setValueCommand(Player sender, String coinType, double value) {
+    public void setValueCommand(Player sender, @Named("货币类型") String coinType, @Named("价值") double value) {
         try {
             ZthCoinBank.coinManager.setCoinValue(coinType, value);
         } catch (UnknowCoinNameException e) {
@@ -166,8 +165,7 @@ public class CoinCommand {
             }
             Component totalMsg = Component.text("总价值").color(NamedTextColor.GRAY)
                     .appendSpace()
-                    .append(Component.text(Math.round(allItemsValue * 100.0) / 100.0).color(NamedTextColor.WHITE))
-                    .appendNewline();
+                    .append(Component.text(Math.round(allItemsValue * 100.0) / 100.0).color(NamedTextColor.WHITE));
             msg = msg.append(totalMsg);
 
             sender.sendMessage(msg);
@@ -180,7 +178,7 @@ public class CoinCommand {
     @Subcommand("deposit")
     @AutoComplete("@coinType")
     @CommandPermission("zth.coinbank.use")
-    public void depositCommand(Player player, String coinType, @Optional Integer amount) {
+    public void depositCommand(Player player, @Named("货币类型") String coinType, @Named("存款数量") @Optional Integer amount) {
         ItemStack[] contents = player.getInventory().getContents();
 
         if (!CoinManager.isCoinName(coinType)) {
@@ -228,17 +226,17 @@ public class CoinCommand {
         // 给钱
         EconomyResponse response = ZthCoinBank.economy.depositPlayer(player, totalValue.doubleValue());
 
-        Component detailMsg = Component.text("尝试存入").color(NamedTextColor.GRAY).appendSpace()
-                .append(Component.text(takeAmount).color(NamedTextColor.WHITE).appendSpace())
-                .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
-                .append(getDisplayName(coin)).appendSpace()
-                .append(Component.text("(单个价值").color(NamedTextColor.GRAY)).appendSpace()
-                .append(Component.text(coin.getWorthValue()).color(NamedTextColor.WHITE))
-                .append(Component.text(")").color(NamedTextColor.GRAY)).appendSpace()
-                .append(Component.text("合计: ").color(NamedTextColor.GRAY)).appendSpace()
-                .append(Component.text(totalValue.doubleValue()).color(NamedTextColor.WHITE)).appendSpace();
-
-        player.sendMessage(detailMsg);
+//        Component detailMsg = Component.text("尝试存入").color(NamedTextColor.GRAY).appendSpace()
+//                .append(Component.text(takeAmount).color(NamedTextColor.WHITE).appendSpace())
+//                .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(getDisplayName(coin)).appendSpace()
+//                .append(Component.text("(单个价值").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text(coin.getWorthValue()).color(NamedTextColor.WHITE))
+//                .append(Component.text(")").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text("合计: ").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text(totalValue.doubleValue()).color(NamedTextColor.WHITE)).appendSpace();
+//
+//        player.sendMessage(detailMsg);
 
         if (response.transactionSuccess()) {
             // 尝试扣除物品
@@ -254,7 +252,7 @@ public class CoinCommand {
             Component successMsg = Component.text("存现成功. 已存入").color(NamedTextColor.GRAY).appendSpace()
                     .append(Component.text(takeAmount).color(NamedTextColor.WHITE)).appendSpace()
                     .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
-                    .append(getDisplayName(coin)).appendSpace()
+                    .append(coin.getDisplayName()).appendSpace()
                     .append(Component.text("，余额变化: ").color(NamedTextColor.GRAY)).appendSpace()
                     .append(Component.text(beforeBal).color(NamedTextColor.WHITE)).appendSpace()
                     .append(Component.text("->").color(NamedTextColor.GRAY)).appendSpace()
@@ -273,11 +271,107 @@ public class CoinCommand {
 
     }
 
+    // 存款全部
+    @Subcommand("deposit-all")
+    @CommandPermission("zth.coinbank.use")
+    public void depositAllCommand(Player player) {
+        ItemStack[] contents = player.getInventory().getContents();
+
+        Map<Coin, Integer> coinAmountMap;
+
+        try {
+            coinAmountMap = CoinItemManager.getCoinAmountMapInItems(contents);
+        } catch (NoCoinSetInConfigException e) {
+            player.sendMessage(Component.text(e.getMessage()).color(NamedTextColor.RED));
+            return;
+        }
+
+        // 记录一次之前的经济
+        double beforeBal = Math.round(ZthCoinBank.economy.getBalance(player) * 100.0) / 100.0;
+
+        // 所有货币的总价值
+        BigDecimal totalValue = BigDecimal.valueOf(0);
+
+        for (Coin coin : coinAmountMap.keySet()) {
+            // 此货币在背包中的数量
+            Integer amount = coinAmountMap.get(coin);
+            // 数量 * 单个价值
+            BigDecimal thisCoinValue = BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(coin.getWorthValue()));
+            totalValue = totalValue.add(thisCoinValue);
+        }
+
+
+        // 如果背包中一分钱也没有
+        if (totalValue.equals(BigDecimal.valueOf(0))) {
+            player.sendMessage(Component.text("身上一分钱也没有了喔.").color(NamedTextColor.RED));
+            return;
+        }
+
+        // 给钱
+        EconomyResponse response = ZthCoinBank.economy.depositPlayer(player, totalValue.doubleValue());
+
+//        Component detailMsg = Component.text("尝试存入").color(NamedTextColor.GRAY).appendSpace()
+//                .append(Component.text(takeAmount).color(NamedTextColor.WHITE).appendSpace())
+//                .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(getDisplayName(coin)).appendSpace()
+//                .append(Component.text("(单个价值").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text(coin.getWorthValue()).color(NamedTextColor.WHITE))
+//                .append(Component.text(")").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text("合计: ").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text(totalValue.doubleValue()).color(NamedTextColor.WHITE)).appendSpace();
+//
+//        player.sendMessage(detailMsg);
+
+        if (response.transactionSuccess()) {
+            // 尝试扣除物品
+            try {
+                for (Coin coin : coinAmountMap.keySet()) {
+                    CoinItemManager.takeItem(contents, coin.getMaterial(), coinAmountMap.get(coin));
+                }
+            } catch (NoEnoughItemException e) {
+                player.sendMessage(Component.text("发生内部错误，请联系管理员：存款时实际扣除货币物品少于预估数量；" + e.getMessage()).color(NamedTextColor.RED));
+                return;
+            }
+
+            double newBal = Math.round(ZthCoinBank.economy.getBalance(player) * 100.0) / 100.0;
+
+
+            Component successMsg = Component.text("已存入").color(NamedTextColor.GRAY).appendSpace();
+
+            for (Coin coin : coinAmountMap.keySet()) {
+                // 不显示没找到的货币
+                if (coinAmountMap.get(coin) == 0) continue;
+
+                successMsg = successMsg.append(
+                        Component.text(coinAmountMap.get(coin)).color(NamedTextColor.WHITE).appendSpace()
+                                .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
+                                .append(coin.getDisplayName()).append(Component.text(",")).appendSpace()
+                );
+            }
+
+            successMsg = successMsg.appendNewline().append(
+                    Component.text("余额变化: ").color(NamedTextColor.GRAY).appendSpace()
+                            .append(Component.text(beforeBal).color(NamedTextColor.WHITE)).appendSpace()
+                            .append(Component.text("->").color(NamedTextColor.GRAY)).appendSpace()
+                            .append(Component.text(newBal).color(NamedTextColor.WHITE))
+            );
+
+            player.sendMessage(successMsg);
+
+            // 对银行账户扣款
+            ZthCoinBank.billPool.submitNewBill(-totalValue.doubleValue());
+        } else {
+            player.sendMessage(Component.text("入账失败, 经济系统返回错误: ").color(NamedTextColor.RED)
+                    .append(Component.text(response.errorMessage))
+            );
+        }
+    }
+
     // 取款 - 兑换余额为实体货币
     @Subcommand("withdraw")
     @AutoComplete("@coinType")
     @CommandPermission("zth.coinbank.use")
-    public void withdrawCommand(Player player, String coinType, @Optional Integer amount) {
+    public void withdrawCommand(Player player, @Named("货币类型") String coinType, @Named("取款数量") @Optional Integer amount) {
         if (!CoinManager.isCoinName(coinType)) {
             player.sendMessage(Component.text("未知的货币名").color(NamedTextColor.RED));
             return;
@@ -308,7 +402,7 @@ public class CoinCommand {
             Component noSpaceMsg = Component.text("您的背包只能容下").appendSpace()
                     .append(Component.text(remainSpace)).appendSpace()
                     .append(Component.text("个")).appendSpace()
-                    .append(getDisplayName(coin)).appendSpace()
+                    .append(coin.getDisplayName()).appendSpace()
                     .append(Component.text(", 而您指定了")).appendSpace()
                     .append(Component.text(amount)).appendSpace()
                     .append(Component.text("个.")).color(NamedTextColor.RED);
@@ -326,17 +420,17 @@ public class CoinCommand {
         // 扣钱
         EconomyResponse response = ZthCoinBank.economy.withdrawPlayer(player, totalValue.doubleValue());
 
-        Component detailMsg = Component.text("尝试取出").color(NamedTextColor.GRAY).appendSpace()
-                .append(Component.text(amount).color(NamedTextColor.WHITE).appendSpace())
-                .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
-                .append(getDisplayName(coin)).appendSpace()
-                .append(Component.text("(单个价值").color(NamedTextColor.GRAY)).appendSpace()
-                .append(Component.text(coin.getWorthValue()).color(NamedTextColor.WHITE))
-                .append(Component.text(")").color(NamedTextColor.GRAY)).appendSpace()
-                .append(Component.text("合计: ").color(NamedTextColor.GRAY)).appendSpace()
-                .append(Component.text(totalValue.doubleValue()).color(NamedTextColor.WHITE)).appendSpace();
-
-        player.sendMessage(detailMsg);
+//        Component detailMsg = Component.text("尝试取出").color(NamedTextColor.GRAY).appendSpace()
+//                .append(Component.text(amount).color(NamedTextColor.WHITE).appendSpace())
+//                .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(getDisplayName(coin)).appendSpace()
+//                .append(Component.text("(单个价值").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text(coin.getWorthValue()).color(NamedTextColor.WHITE))
+//                .append(Component.text(")").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text("合计: ").color(NamedTextColor.GRAY)).appendSpace()
+//                .append(Component.text(totalValue.doubleValue()).color(NamedTextColor.WHITE)).appendSpace();
+//
+//        player.sendMessage(detailMsg);
 
         if (response.transactionSuccess()) {
             // 给予物品
@@ -357,7 +451,7 @@ public class CoinCommand {
             Component successMsg = Component.text("取现成功. 已取出").color(NamedTextColor.GRAY).appendSpace()
                     .append(Component.text(amount).color(NamedTextColor.WHITE)).appendSpace()
                     .append(Component.text("个").color(NamedTextColor.GRAY)).appendSpace()
-                    .append(getDisplayName(coin)).appendSpace()
+                    .append(coin.getDisplayName()).appendSpace()
                     .append(Component.text("，余额变化: ").color(NamedTextColor.GRAY)).appendSpace()
                     .append(Component.text(beforeBal).color(NamedTextColor.WHITE)).appendSpace()
                     .append(Component.text("->").color(NamedTextColor.GRAY)).appendSpace()
@@ -376,15 +470,10 @@ public class CoinCommand {
 
     }
 
-    /**
-     * 返回 Coin 的 displayName 或货币类型名
-     */
-    private static Component getDisplayName(Coin coin) {
-        // 获取物品名称
-        if (coin.getMaterial().getItemMeta().hasDisplayName()) {
-            return coin.getMaterial().getItemMeta().displayName();
-        } else {
-            return Component.text(coin.getCoinName());
-        }
+    @Subcommand("bank")
+    @CommandPermission("zth.coinbank.use")
+    public void bandCommand(Player player) {
+        CoinManager.getBankTui().forEach(player::sendMessage);
     }
+
 }
