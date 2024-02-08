@@ -126,6 +126,7 @@ public class CoinManager {
 
     public static List<String> getCoinNames() {
         return List.of("ingot", "nugget", "powder");
+
     }
 
     public static Boolean isCoinName(String coinName) {

@@ -57,6 +57,12 @@ public class CoinCommand {
         sender.sendMessage(helpComponent);
     }
 
+    @Subcommand("bank")
+    @CommandPermission("zth.coinbank.use")
+    public void bandCommand(Player player) {
+        CoinManager.getBankTui().forEach(player::sendMessage);
+    }
+
     @Subcommand("set item")
     @AutoComplete("@coinType")
     @CommandPermission("zth.coinbank.admin")
@@ -469,11 +475,4 @@ public class CoinCommand {
 
 
     }
-
-    @Subcommand("bank")
-    @CommandPermission("zth.coinbank.use")
-    public void bandCommand(Player player) {
-        CoinManager.getBankTui().forEach(player::sendMessage);
-    }
-
 }

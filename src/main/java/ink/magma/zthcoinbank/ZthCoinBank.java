@@ -5,6 +5,7 @@ import ink.magma.zthcoinbank.Coin.CoinManager;
 import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
 import ink.magma.zthcoinbank.Command.CoinCommand;
 import ink.magma.zthcoinbank.Listener.PlayerCoinHoldListener;
+import ink.magma.zthcoinbank.Listener.PlayerMoneyCommandListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
@@ -48,6 +49,7 @@ public final class ZthCoinBank extends JavaPlugin {
 
         // event
         Bukkit.getPluginManager().registerEvents(new PlayerCoinHoldListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerMoneyCommandListener(), this);
 
         // 账单池 & 定时任务
         billPool = new BillPool();
