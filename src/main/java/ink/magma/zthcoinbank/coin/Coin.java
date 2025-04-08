@@ -1,4 +1,4 @@
-package ink.magma.zthcoinbank.Coin;
+package ink.magma.zthcoinbank.coin;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;

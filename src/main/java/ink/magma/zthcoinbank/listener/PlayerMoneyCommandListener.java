@@ -1,6 +1,6 @@
-package ink.magma.zthcoinbank.Listener;
+package ink.magma.zthcoinbank.listener;
 
-import ink.magma.zthcoinbank.Coin.CoinManager;
+import ink.magma.zthcoinbank.coin.CoinManager;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;

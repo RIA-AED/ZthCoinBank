@@ -1,7 +1,7 @@
-package ink.magma.zthcoinbank.Coin;
+package ink.magma.zthcoinbank.coin;
 
-import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
-import ink.magma.zthcoinbank.Coin.Error.UnknowCoinNameException;
+import ink.magma.zthcoinbank.coin.error.NoCoinSetInConfigException;
+import ink.magma.zthcoinbank.coin.error.UnknowCoinNameException;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;

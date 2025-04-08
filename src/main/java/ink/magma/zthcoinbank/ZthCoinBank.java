@@ -1,11 +1,11 @@
 package ink.magma.zthcoinbank;
 
-import ink.magma.zthcoinbank.BankAccount.BillPool;
-import ink.magma.zthcoinbank.Coin.CoinManager;
-import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
-import ink.magma.zthcoinbank.Command.CoinCommand;
-import ink.magma.zthcoinbank.Listener.PlayerCoinHoldListener;
-import ink.magma.zthcoinbank.Listener.PlayerMoneyCommandListener;
+import ink.magma.zthcoinbank.bankaccount.BillPool;
+import ink.magma.zthcoinbank.coin.CoinManager;
+import ink.magma.zthcoinbank.coin.error.NoCoinSetInConfigException;
+import ink.magma.zthcoinbank.command.CoinCommand;
+import ink.magma.zthcoinbank.listener.PlayerCoinHoldListener;
+import ink.magma.zthcoinbank.listener.PlayerMoneyCommandListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
