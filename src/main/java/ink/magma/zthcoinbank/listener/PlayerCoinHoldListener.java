@@ -1,8 +1,8 @@
-package ink.magma.zthcoinbank.Listener;
+package ink.magma.zthcoinbank.listener;
 
-import ink.magma.zthcoinbank.Coin.Coin;
-import ink.magma.zthcoinbank.Coin.CoinManager;
-import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
+import ink.magma.zthcoinbank.coin.Coin;
+import ink.magma.zthcoinbank.coin.CoinManager;
+import ink.magma.zthcoinbank.coin.error.NoCoinSetInConfigException;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;

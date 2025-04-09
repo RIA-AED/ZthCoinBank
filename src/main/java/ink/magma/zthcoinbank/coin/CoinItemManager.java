@@ -1,7 +1,7 @@
-package ink.magma.zthcoinbank.Coin;
+package ink.magma.zthcoinbank.coin;
 
-import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
-import ink.magma.zthcoinbank.Coin.Error.NoEnoughItemException;
+import ink.magma.zthcoinbank.coin.error.NoCoinSetInConfigException;
+import ink.magma.zthcoinbank.coin.error.NoEnoughItemException;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;

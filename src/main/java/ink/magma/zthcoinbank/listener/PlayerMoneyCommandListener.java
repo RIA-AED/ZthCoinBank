@@ -1,6 +1,6 @@
-package ink.magma.zthcoinbank.Listener;
+package ink.magma.zthcoinbank.listener;
 
-import ink.magma.zthcoinbank.Coin.CoinManager;
+import ink.magma.zthcoinbank.coin.CoinManager;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

@@ -1,4 +1,4 @@
-package ink.magma.zthcoinbank.BankAccount;
+package ink.magma.zthcoinbank.bankaccount;
 
 import ink.magma.zthcoinbank.ZthCoinBank;
 import net.milkbowl.vault.economy.EconomyResponse;

@@ -1,7 +1,7 @@
-package ink.magma.zthcoinbank.Coin;
+package ink.magma.zthcoinbank.coin;
 
-import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
-import ink.magma.zthcoinbank.Coin.Error.UnknowCoinNameException;
+import ink.magma.zthcoinbank.coin.error.NoCoinSetInConfigException;
+import ink.magma.zthcoinbank.coin.error.UnknowCoinNameException;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;

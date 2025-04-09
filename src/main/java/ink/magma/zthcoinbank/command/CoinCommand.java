@@ -1,11 +1,11 @@
-package ink.magma.zthcoinbank.Command;
+package ink.magma.zthcoinbank.command;
 
-import ink.magma.zthcoinbank.Coin.Coin;
-import ink.magma.zthcoinbank.Coin.CoinItemManager;
-import ink.magma.zthcoinbank.Coin.CoinManager;
-import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
-import ink.magma.zthcoinbank.Coin.Error.NoEnoughItemException;
-import ink.magma.zthcoinbank.Coin.Error.UnknowCoinNameException;
+import ink.magma.zthcoinbank.coin.Coin;
+import ink.magma.zthcoinbank.coin.CoinItemManager;
+import ink.magma.zthcoinbank.coin.CoinManager;
+import ink.magma.zthcoinbank.coin.error.NoCoinSetInConfigException;
+import ink.magma.zthcoinbank.coin.error.NoEnoughItemException;
+import ink.magma.zthcoinbank.coin.error.UnknowCoinNameException;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.EconomyResponse;
