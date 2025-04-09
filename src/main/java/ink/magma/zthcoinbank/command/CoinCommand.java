@@ -506,7 +506,9 @@ public class CoinCommand implements CommandExecutor, TabCompleter {
             ZthCoinBank.billPool.submitNewBill(totalValue.doubleValue());
         } else {
             player.sendMessage(
-                    ChatColor.RED + "扣账失败, 经济系统返回错误: " + response.errorMessage
+                    (response.errorMessage.equalsIgnoreCase("Insufficient balance!"))?
+                            ChatColor.RED + "身上一分钱也没有了喔.":
+                            ChatColor.RED + "扣账失败, 经济系统返回错误: " + response.errorMessage
             );
         }
     }
