@@ -6,7 +6,7 @@
 
     <groupId>ink.magma</groupId>
     <artifactId>ZthCoinBank</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2-Spigot</version>
     <packaging>jar</packaging>
 
     <name>ZthCoinBank</name>
@@ -82,12 +82,16 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

@@ -3,8 +3,10 @@ package ink.magma.zthcoinbank.Coin;
 import ink.magma.zthcoinbank.Coin.Error.NoCoinSetInConfigException;
 import ink.magma.zthcoinbank.Coin.Error.UnknowCoinNameException;
 import ink.magma.zthcoinbank.ZthCoinBank;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,46 +25,53 @@ public class CoinManager {
         configuration = ZthCoinBank.configuration;
     }
 
-    public static List<Component> getBankTui() {
-        MiniMessage mini = MiniMessage.miniMessage();
+    public static List<TextComponent> getBankTui() {
+        List<TextComponent> components = new ArrayList<>();
         Map<String, Coin> coins;
 
         try {
             coins = ZthCoinBank.coinManager.getAllCoins();
         } catch (NoCoinSetInConfigException e) {
-            return new ArrayList<>();
+            return components;
         }
 
-        Component head = mini.deserialize("<b><gradient:#f38181:#fce38a>---===</gradient> <color:#f9ca24>RIA Central bank</color> <gradient:#fce38a:#f38181>===---</gradient></b>");
-        Component withdraw = mini.deserialize("<color:#ff85c0>$ 取现</color> > ");
-        Component deposit = mini.deserialize("<color:#ffd666>$ 存现</color> > ");
-        Component depositAll = mini.deserialize("<color:#faad14>$ 背包全部存现</color> > ");
+        // 创建头部信息
+        TextComponent head = new TextComponent("§b§l---===§e RIA中央银行 §aFST分行 §b§l===---");
+        components.add(head);
 
-        for (Coin coin : coins.values()) {
-            withdraw = withdraw.append(mini.deserialize(MessageFormat.format(
-                    "<click:suggest_command:''/coin withdraw {0} ''><hover:show_text:'输入此币种的数量'>{1}</hover></click>  ",
-                    coin.getCoinName(),
-                    mini.serialize(coin.getDisplayName())
-            )));
-
-            deposit = deposit.append(mini.deserialize(MessageFormat.format(
-                    "<click:suggest_command:''/coin deposit {0} ''><hover:show_text:'输入此币种的数量'>{1}</hover></click>  ",
-                    coin.getCoinName(),
-                    mini.serialize(coin.getDisplayName())
-            )));
-
-            depositAll = depositAll.append(mini.deserialize(MessageFormat.format(
-                    "<click:run_command:''/coin deposit {0}''><hover:show_text:'点击存现背包中所有此币种的货币'>{1}</hover></click>  ",
-                    coin.getCoinName(),
-                    mini.serialize(coin.getDisplayName())
-            )));
+        // 创建取现组件
+        TextComponent withdraw = new TextComponent("§6$ 取现 > ");
+        for (String coinName : ZthCoinBank.coinManager.getCoinNames()) {
+            Coin coin = coins.get(coinName);
+            TextComponent coinComponent = new TextComponent("§6" + coin.getDisplayName());
+            coinComponent.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/coin withdraw " + coin.getCoinName()));
+            coinComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{new TextComponent("输入此币种的数量")}));
+            withdraw.addExtra(coinComponent);
+            withdraw.addExtra(" ");
         }
+        components.add(withdraw);
 
-        depositAll = depositAll.append(mini.deserialize(
-                "<click:run_command:'/coin deposit-all'><color:#faad14><hover:show_text:'点击存现背包中所有货币'>[存入所有币种]</hover></color></click>"
-        ));
+        // 创建存现组件
+        TextComponent deposit = new TextComponent("§7$ 存现 > ");
+        for (String coinName : ZthCoinBank.coinManager.getCoinNames()) {
+            Coin coin = coins.get(coinName);
+            TextComponent coinComponent = new TextComponent("§7" + coin.getDisplayName());
+            coinComponent.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/coin deposit " + coin.getCoinName()));
+            coinComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{new TextComponent("输入此币种的数量")}));
+            deposit.addExtra(coinComponent);
+            deposit.addExtra(" ");
+        }
+        components.add(deposit);
 
-        return List.of(head, withdraw, deposit, depositAll);
+        // 创建背包全部存现组件
+        TextComponent depositAll = new TextComponent("§a$ 背包全部存现 > ");
+        TextComponent depositAllButton = new TextComponent("§a§l"+ZthCoinBank.getText("button"));
+        depositAllButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/coin deposit-all"));
+        depositAllButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{new TextComponent("点击存现背包中所有货币")}));
+        depositAll.addExtra(depositAllButton);
+        components.add(depositAll);
+
+        return components;
     }
 
     public void saveCoinItem(ItemStack coin, String coinName) throws UnknowCoinNameException {
@@ -124,14 +133,25 @@ public class CoinManager {
         return whatCoinIsThis;
     }
 
-    public static List<String> getCoinNames() {
+    public String getCoinDisplayName(String coinName){
+        String displayName = configuration.getString("display_names." + coinName);
+        return displayName==null||displayName.isEmpty()?"未知币种":displayName;
+    }
+
+    public List<String> getCoinDisplayNames() {
+        List<String> displayNames= new ArrayList<>(3);
+        for(var name:getCoinNames()){
+            displayNames.add(getCoinDisplayName(name));
+        }
+        return displayNames;
+    }
+
+    public List<String> getCoinNames() {
         return List.of("ingot", "nugget", "powder");
 
     }
 
-    public static Boolean isCoinName(String coinName) {
+    public Boolean isCoinName(String coinName) {
         return getCoinNames().contains(coinName);
     }
-
-
 }

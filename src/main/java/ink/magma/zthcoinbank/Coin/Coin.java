@@ -1,6 +1,5 @@
 package ink.magma.zthcoinbank.Coin;
-
-import net.kyori.adventure.text.Component;
+import ink.magma.zthcoinbank.ZthCoinBank;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
@@ -20,13 +19,8 @@ public class Coin {
     /**
      * 返回 Coin 的 displayName 或货币类型名
      */
-    public Component getDisplayName() {
-        // 获取物品名称
-        if (this.getMaterial().getItemMeta().hasDisplayName()) {
-            return this.getMaterial().getItemMeta().displayName();
-        } else {
-            return Component.text(this.getCoinName());
-        }
+    public String getDisplayName() {
+        return ZthCoinBank.coinManager.getCoinDisplayName(coinName);
     }
 
     public String getCoinName() {

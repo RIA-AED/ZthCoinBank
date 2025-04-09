@@ -11,3 +11,9 @@ settings:
     ingot: 1
     nugget: 0.1
     powder: 0.01
+display_names:
+  ingot: 锭
+  nugget: 粒
+  powder: 尘
+text:
+  button: CLICK

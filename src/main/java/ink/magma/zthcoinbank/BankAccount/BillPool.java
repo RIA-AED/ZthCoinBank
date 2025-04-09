@@ -4,7 +4,6 @@ import ink.magma.zthcoinbank.ZthCoinBank;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
 
@@ -81,7 +80,6 @@ public class BillPool {
         }
     }
 
-    @NotNull
     private static OfflinePlayer getBankAccount() {
         return ZthCoinBank.INSTANCE.getServer().getOfflinePlayer(getBankAccountName());
     }
