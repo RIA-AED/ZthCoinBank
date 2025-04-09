@@ -1,4 +1,4 @@
-package ink.magma.zthcoinbank.Coin;
+package ink.magma.zthcoinbank.coin;
 import ink.magma.zthcoinbank.ZthCoinBank;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,9 +42,7 @@ public class Coin {
 
         if (!Objects.equals(this.coinName, thatCoin.coinName)) return false;
         if (!Objects.equals(this.material, thatCoin.material)) return false;
-        if (Double.compare(this.value, thatCoin.value) != 0) return false;
-
-        return true;
+        return Double.compare(this.value, thatCoin.value) == 0;
     }
 
     @Override
